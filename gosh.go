@@ -42,7 +42,8 @@ func printCommandLine() {
 func pwd() {
     cwd, err := os.Getwd()
     if nil != err {
-        panic("Error getting current working directory!")
+        fmt.Println("Error getting current working directory!")
+        return
     }
     fmt.Println(cwd)
 }
@@ -260,7 +261,8 @@ func parseCommand(args []string) {
     args = args[1:len(args)]
     cmd, err := exec.Command(head, args...).Output()
     if nil != err {
-        fmt.Printf("\x1b[31;1m%s: command not found\x1b[0m\n", head)
+//        fmt.Printf("\x1b[31;1m%s: command not found\x1b[0m\n", head)
+        fmt.Printf("\x1b[31;1m%s: %s\x1b[0m\n", head, err)
     } else {
         fmt.Printf("%s", cmd)
     }
