@@ -171,7 +171,7 @@ func llFile(name string) {
 		perms = "l" + perms
 	}
 
-	fmt.Printf("%s\t", perms)
+	fmt.Printf("%s ", perms)
 
 	var stNumLinks uint64
 	sys := file.Sys()
@@ -185,7 +185,7 @@ func llFile(name string) {
 	fmt.Printf("%d\t", sys.(*syscall.Stat_t).Uid)
 	fmt.Printf("%d\t", sys.(*syscall.Stat_t).Gid)
 	fmt.Printf("%d\t", file.Size())
-	fmt.Printf("%s\t", file.ModTime().Format(time.UnixDate))
+	fmt.Printf("%s ", file.ModTime().Format(time.UnixDate))
 	fmt.Printf("%s", file.Name())
 
 	if 0 != (file.Mode() & os.ModeSymlink) {
@@ -256,12 +256,18 @@ func ls(args []string) {
 	}
 }
 
+func printOut(line string) {
+	fmt.Printf("%s", line)
+}
+
 // Parse the string the user enters in to the command prompt.
 func parseCommand(line string) {
-	cmd := exec.Command("/bin/sh", "-c", line)
 	var out bytes.Buffer
+
+	cmd := exec.Command("/bin/sh", "-c", line)
 	cmd.Stdout = &out
 	err := cmd.Run()
+
 	if nil != err {
 		args := strings.Split(line, " ")
 		fmt.Printf("\x1b[31;1m%s: %s\x1b[0m\n", args[0], err)
@@ -275,13 +281,11 @@ func parseCommand(line string) {
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
-
 	for {
 		printCommandLine()
 
 		scanner.Scan()
 		line := scanner.Text()
-
 		args := strings.Split(line, " ")
 
 		if "" == args[0] || " " == args[0] {
