@@ -2,10 +2,10 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
+	"os/signal"
 	"os/user"
 	"strings"
 	"syscall"
@@ -262,25 +262,26 @@ func printOut(line string) {
 
 // Parse the string the user enters in to the command prompt.
 func parseCommand(line string) {
-	var out bytes.Buffer
-
 	cmd := exec.Command("/bin/sh", "-c", line)
-	cmd.Stdout = &out
-	err := cmd.Run()
-
-	if nil != err {
-		args := strings.Split(line, " ")
-		fmt.Printf("\x1b[31;1m%s: %s\x1b[0m\n", args[0], err)
-	} else {
-		shellOutput := out.String()
-		for i := 0; i < len(shellOutput); i++ {
-			fmt.Printf("%c", shellOutput[i])
-		}
-	}
+	cmd.Stdout = os.Stdout //&out
+	cmd.Stderr = os.Stderr
+	cmd.Run()
 }
 
 func main() {
+	s := make(chan os.Signal, 1)
+	signal.Notify(s, os.Interrupt)
+
+	go func() {
+		for {
+			<-s
+			fmt.Printf("\n")
+			printCommandLine()
+		}
+	}()
+
 	scanner := bufio.NewScanner(os.Stdin)
+
 	for {
 		printCommandLine()
 
