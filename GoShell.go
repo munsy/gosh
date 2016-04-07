@@ -262,6 +262,14 @@ func printOut(line string) {
 
 // Parse the string the user enters in to the command prompt.
 func parseCommand(line string) {
+	s := make(chan os.Signal, 1)
+	signal.Notify(s, os.Interrupt)
+
+	go func() {
+		for {
+			<-s
+		}
+	}()
 	cmd := exec.Command("/bin/sh", "-c", line)
 	cmd.Stdout = os.Stdout //&out
 	cmd.Stderr = os.Stderr
@@ -276,15 +284,14 @@ func main() {
 		for {
 			<-s
 			fmt.Printf("\n")
-			printCommandLine()
 		}
 	}()
+
+	printCommandLine()
 
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
-		printCommandLine()
-
 		scanner.Scan()
 		line := scanner.Text()
 		args := strings.Split(line, " ")
@@ -302,5 +309,6 @@ func main() {
 		} else {
 			parseCommand(line)
 		}
+		printCommandLine()
 	}
 }
