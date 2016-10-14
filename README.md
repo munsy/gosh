@@ -1,3 +1,3 @@
 # GoShell
-A shell emulator written in Go.
+A shell emulator written in Golang.
 
