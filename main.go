@@ -12,10 +12,10 @@ import (
 	"time"
 )
 
-// Get GoShell version information.
+// Get GoSh version information.
 func version() {
-	fmt.Println("\x1b[32;1mGoShell v1.0 - A terminal emulator written in Go!\x1b[0m")
-	fmt.Println("\x1b[32;1mWritten by a loon (Tim Munson).\x1b[0m")
+	fmt.Println("\x1b[32;1mGoSh v1.0 - A terminal emulator written in Go!\x1b[0m")
+	fmt.Println("\x1b[32;1mWritten by Munsy.\x1b[0m")
 	fmt.Println("\x1b[32;1mLast updated: 12/22/2015\x1b[0m")
 }
 
